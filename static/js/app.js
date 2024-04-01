@@ -162,3 +162,4 @@ function optionChanged(value) {
     bubbleChart(value)
     demographicInfo(value)
     };
+    
