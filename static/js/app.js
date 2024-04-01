@@ -1,15 +1,15 @@
 // Assigning URL to constant variable
 const url = "https://static.bc-edx.com/data/dl-1-2/m14/lms/starter/samples.json";
 
-
 // Building bar chart
 function barChart(selectedID) {
     
     // Fetch data
     d3.json(url).then(data => {
+
         // Filter JSON data based on selected ID from Dropdown
         let selectedSample = data.samples.filter(sample => sample.id == selectedID);
-                    
+                  
         // Save data to ID so it can be traversed into
         let sampleData = selectedSample[0];
         
@@ -33,7 +33,14 @@ function barChart(selectedID) {
 
     // Build out layout for bar chart,
     let layout = {
-        yref: "container",       
+        autosize: false,
+        margin: {
+            l : 75,
+            r : 0,
+            t : 0,
+            b : 25,
+            pad: 4
+        }
     };
 
     Plotly.newPlot("bar", [trace1], layout);
@@ -51,6 +58,7 @@ function bubbleChart(selectedID) {
         // Save data to ID so it can be traversed into
         let sampleData = selectedSample[0];
         
+        // Save ID to variable
         let titleID = sampleData.id; 
 
         // Select OTU IDs,
@@ -78,34 +86,44 @@ function bubbleChart(selectedID) {
 
     // Build out layout for bar chart,
     let layout2 = {
-        title : {
+        title: {
             text: `OTU ID ${titleID}`,
             yanchor: "bottom",
-            y: 0.1
-    },
-        showlegend: false,
-        automargin: true
+            y: 0.1,
+            margin: {
+                l : 0,
+                r : 0,
+                t : -100,
+                b : 0,
+                pad: 4
+            },
+        },
     };
+
     Plotly.newPlot("bubble", [trace2], layout2);
-});
+})
 };
 
 //Build Demographic Info section
 function demographicInfo(selectedID) {
     
+    //Fetch data
     d3.json(url).then((data) => {
-
+        
+        // Filter on selected value and save Metadata JSON info into variable
         let metadata = data.metadata.filter(mdata => mdata.id == selectedID);
 
+        // Save first set of metadata into variable
         let metdata_first = metadata[0];
-
+        
+        //Empty demographic info fields
         d3.select("#sample-metadata").html("");
 
+        //Assign key value paris from metadata
         Object.entries(metdata_first).forEach(([key,value]) => {
             
-            console.log("Demographic Info", key, value);
-
-            d3.select("#sample-metadata").append("p").text(`${key}: ${value}`);
+            //Append the key value pairs to the sample-meta html location
+            d3.select("#sample-metadata").append("p").text(`${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}`);
         });
     });
 
@@ -126,17 +144,21 @@ let id_dropDown = d3.select("#selDataset");
         initialSelect = (data.names[0])
         // Console log the inital selected value
         console.log("Initial Select ", initialSelect);
+
+        // Call all the chart functions
         barChart(initialSelect)
         bubbleChart(initialSelect)
         demographicInfo(initialSelect)
-        washingGauge(initialSelect)
-    });
+
+        });
 
 // Creating function to capture when dropdown is changed
 function optionChanged(value) {
-    console.log("Options changed: ",value);
+    // Console log the next selected value from the dropdown
+    console.log("Next Select: ",value);
+    
+    // Call all the chart functions
     barChart(value);
     bubbleChart(value)
     demographicInfo(value)
-    washingGauge(value)
     };
