@@ -1,16 +1,16 @@
 // Assigning URL to constant variable
 const url = "https://static.bc-edx.com/data/dl-1-2/m14/lms/starter/samples.json";
 
-// Building bar chart
+// Building bar chart function
 function barChart(selectedID) {
     
-    // Fetch data
+    // Fetching data from URL
     d3.json(url).then(data => {
 
         // Filter JSON data based on selected ID from Dropdown
         let selectedSample = data.samples.filter(sample => sample.id == selectedID);
                   
-        // Save data to ID so it can be traversed into
+        // Save data to variable so it can be traversed into
         let sampleData = selectedSample[0];
         
         // Select top 10 IDs, concate the OTU text and save to variable 
@@ -47,30 +47,31 @@ function barChart(selectedID) {
 });
 };
 
-// Building bubble chart
+// Building bubble chart function
 function bubbleChart(selectedID) {
     
-    // Fetch data
+    // Fetching data from URL
     d3.json(url).then(data => {
+
         // Filter JSON data based on selected ID from Dropdown
         let selectedSample = data.samples.filter(sample => sample.id == selectedID);
                 
-        // Save data to ID so it can be traversed into
+        // Save data to variable so it can be traversed into
         let sampleData = selectedSample[0];
         
         // Save ID to variable
         let titleID = sampleData.id; 
 
-        // Select OTU IDs,
+        // Save OTU IDs to variable,
         let bubbleOtuIds = sampleData.otu_ids;
             
-        // Select to 10 sample values and save to variable
+        // Save sample values to variable
         let bubbleSampleValues = sampleData.sample_values
                     
-        // Select to 10 otu lables and save to variable
+        // Save otu lables to variable
         let bubbleLabels = sampleData.otu_labels
                     
-    // Build out trace for bar chart, need to reverse to adjust for plotly default
+    // Build out trace for bubble chart
     let trace2 = {
         x: bubbleOtuIds,
         xlabel: "OTU",
@@ -84,7 +85,7 @@ function bubbleChart(selectedID) {
         }
     };
 
-    // Build out layout for bar chart,
+    // Build out layout for bubble chart,
     let layout2 = {
         title: {
             text: `OTU ID ${titleID}`,
@@ -104,13 +105,13 @@ function bubbleChart(selectedID) {
 })
 };
 
-//Build Demographic Info section
+//Build Demographic Info section function
 function demographicInfo(selectedID) {
     
     //Fetch data
     d3.json(url).then((data) => {
         
-        // Filter on selected value and save Metadata JSON info into variable
+        // Filter JSON data based on selected ID from Dropdown
         let metadata = data.metadata.filter(mdata => mdata.id == selectedID);
 
         // Save first set of metadata into variable
@@ -119,7 +120,7 @@ function demographicInfo(selectedID) {
         //Empty demographic info fields
         d3.select("#sample-metadata").html("");
 
-        //Assign key value paris from metadata
+        //Assign key value pairs from metadata
         Object.entries(metdata_first).forEach(([key,value]) => {
             
             //Append the key value pairs to the sample-meta html location
